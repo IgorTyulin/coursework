@@ -16,15 +16,16 @@ t_h = (0:0.2:10)*pi/180; % Theta angle
 t = -T/2:d_t:T/2;
 t_demonstrate = -5.5*(10^-9):0.01*(10^-9):5.5*(10^-9); % For reasonable plot display
 
+%Ищем значения для формулы с подставленной единицей и рисуем графики
 %calculation
-% f_norm = calc_f_norm(one_t_h, a, c, t_demonstrate);
+% normal
 t_actual = t_demonstrate;
 ro = one_t_h;
 f_norm = zeros(1, length(t_actual));
 i = find(abs(c*t_actual) < a * sin(ro));
 f_norm(i) = (1/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2);
 
-% f_fal = calc_f_fal(one_t_h, 1, a, c, t_demonstrate);
+% falling n = 1
 t_actual = t_demonstrate;
 ro = one_t_h;
 n = 1;
@@ -32,7 +33,7 @@ f_fal = zeros(1, length(t_actual));
 i = find(abs(c*t_actual) < a * sin(ro));
 f_fal(i) = (1/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro))^2))).^n;
 
-% f_fal_2 = calc_f_fal(one_t_h, 2, a, c, t_demonstrate);
+% falling n = 2
 t_actual = t_demonstrate;
 ro = one_t_h;
 n = 2;
@@ -92,32 +93,23 @@ for j = 1 : size(t_h, 2)
     ro = i_t_h;  
     
     % norm
-    % E_f_norm(j, :) = calc_f_norm(i_t_h, a, c, t);
     E_f_norm(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.01));
-    %
-    %
-    %
-    E_f_norm(j, i) = (1/(pi*sin(ro+0.01)^2))*sqrt((a*sin(ro+0.01))^2-(c*t_actual(i)).^2);
-    %
-    %
-    %
+    i = find(abs(c*t_actual) < a * sin(ro));
+    E_f_norm(j, i) = (1/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2);
     E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
     
     % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
     n = 1;
     E_f_fal_1(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.02));
-    E_f_fal_1(j, i) = (1/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.02))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.02))^2))).^n;
+    i = find(abs(c*t_actual) < a * sin(ro));
+    E_f_fal_1(j, i) = (1/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro))^2))).^n;
     E_f_fal_1(j, :) = fft(E_f_fal_1(j, :), N_FFT);
     
     % falling 2
-    % E_f_fal_2(j, :) = calc_f_fal(i_t_h, 2, a, c, t);
     n = 2;
     E_f_fal_2(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.03));
-    E_f_fal_2(j, i) = (1/(pi*sin(ro+0.03)^2))*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
+    i = find(abs(c*t_actual) < a * sin(ro));
+    E_f_fal_2(j, i) = (1/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro))^2))).^n;
     E_f_fal_2(j, :) = fft(E_f_fal_2(j, :), N_FFT);
 end
 
@@ -137,24 +129,23 @@ ylabel('Amplitude, dB')
 legend('Uniform distribution', 'Falling distribution. n=1', 'Falling distribution. n=2')
 
 
-    
+%Подставляем в формулу cos (вместо cos^2) и рисуем графики    
 %calculation
 t_actual = t_demonstrate;
 ro = one_t_h;
 
-% f_fal_3 = calc_f_fal(one_t_h, 3, a, c, t_demonstrate);
-%n = 0;
+% normal
 f_fal_3 = zeros(1, length(t_actual));
 i = find(abs(c*t_actual) < a * sin(ro));
 f_fal_3(i) = (cos(ro)/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2);
 
-% f_fal_4 = calc_f_fal(one_t_h, 4, a, c, t_demonstrate);
+% falling n = 1
 n = 1;
 f_fal_4 = zeros(1, length(t_actual));
 i = find(abs(c*t_actual) < a * sin(ro));
 f_fal_4(i) = (cos(ro)/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro))^2))).^n;
 
-% f_fal_5 = calc_f_fal(one_t_h, 5, a, c, t_demonstrate);
+% falling n = 2
 n = 2;
 f_fal_5 = zeros(1, length(t_actual));
 i = find(abs(c*t_actual) < a * sin(ro));
@@ -210,25 +201,24 @@ for j = 1 : size(t_h, 2)
     t_actual = t/2;
     ro = i_t_h;
     
+    % norm
     E_cos_norm(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.02));
-    E_cos_norm(j, i) = (cos(ro+0.02)/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.02))^2-(c*t_actual(i)).^2);
+    i = find(abs(c*t_actual) < a * sin(ro+0.01));
+    E_cos_norm(j, i) = (cos(ro+0.01)/(pi*sin(ro+0.01)^2))*sqrt((a*sin(ro+0.01))^2-(c*t_actual(i)).^2);
     E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
     
     % falling n=1
-    % E_f_fal_4(j, :) = calc_f_fal(i_t_h, 4, a, c, t);
     n = 1;
     E_cos_fal_1(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.02));
-    E_cos_fal_1(j, i) = (cos(ro+0.02)/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.02))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.02))^2))).^n;
+    i = find(abs(c*t_actual) < a * sin(ro+0.01));
+    E_cos_fal_1(j, i) = (cos(ro+0.01)/(pi*sin(ro+0.01)^2))*sqrt((a*sin(ro+0.01))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.01))^2))).^n;
     E_cos_fal_1(j, :) = fft(E_cos_fal_1(j, :), N_FFT);
     
     % falling n=2
-    % E_f_fal_5(j, :) = calc_f_fal(i_t_h, 5, a, c, t);
     n = 2;
     E_cos_fal_2(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.03));
-    E_cos_fal_2(j, i) = (cos(ro+0.03)/(pi*sin(ro+0.03)^2))*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
+    i = find(abs(c*t_actual) < a * sin(ro+0.01));
+    E_cos_fal_2(j, i) = (cos(ro+0.01)/(pi*sin(ro+0.01)^2))*sqrt((a*sin(ro+0.01))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.01))^2))).^n;
     E_cos_fal_2(j, :) = fft(E_cos_fal_2(j, :), N_FFT);
 end
 
@@ -249,24 +239,28 @@ legend('Falling distribution.', 'Falling distribution. n=1', 'Falling distributi
 
 
 %Comparison of graphs between 1 and cos
-
 for j = 1 : size(t_h, 2)
     i_t_h = t_h(j);
     t_actual = t/2;
     ro = i_t_h;
     
-    % norm
-    % E_f_norm(j, :) = calc_f_norm(i_t_h, a, c, t);
+    % norm with 1
     E_f_norm(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.01));
-    E_f_norm(j, i) = (1/(pi*sin(ro+0.01)^2))*sqrt((a*sin(ro+0.01))^2-(c*t_actual(i)).^2);
+    i = find(abs(c*t_actual) < a * sin(ro+0.02));
+    E_f_norm(j, i) = (1/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.02))^2-(c*t_actual(i)).^2);
     E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
 
-    % norm
+    %norm with cos
     E_cos_norm(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.02));
-    E_cos_norm(j, i) = (cos(ro+0.02)/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.02))^2-(c*t_actual(i)).^2);
+    i = find(abs(c*t_actual) < a * sin(ro+0.01));
+    E_cos_norm(j, i) = (cos(ro+0.01)/(pi*sin(ro+0.01)^2))*sqrt((a*sin(ro+0.01))^2-(c*t_actual(i)).^2);
     E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
+    
+    %norm with cos^2
+     E_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.01));
+    E_norm(j, i) = (cot(ro+0.01)/pi)*sqrt((a*sin(ro+0.01))^2-(c*t_actual(i)).^2);
+    E_norm(j, :) = fft(E_norm(j, :), N_FFT);
 end
 
 d_f = 1/N_FFT/d_t;
@@ -276,67 +270,30 @@ figure
 plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_norm(:, p))/max(abs(E_f_norm(:, p)))), 'k')
 hold on
 plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), '--k')
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_norm(:, p))/max(abs(E_norm(:, p)))), '-.k')
 grid on
 hold off
 title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 0')
 xlabel('2*a/\lambda*sin(\Theta)')
 ylabel('Amplitude, dB')
-legend('With 1', 'With cos')
+legend('With 1', 'With cos', 'With cos^2')
 
 for j = 1 : size(t_h, 2)
     i_t_h = t_h(j);
     t_actual = t/2;
     ro = i_t_h;
     
-    % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    % falling 1 with 1
     n = 1;
     E_f_norm(j, :) = zeros(1, length(t_actual));
     i = find(abs(c*t_actual) < a * sin(ro+0.02));
     E_f_norm(j, i) = (1/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.02))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.02))^2))).^n;
     E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
 
-    % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    % falling 1 with cos
     n = 1;
     E_cos_norm(j, :) = zeros(1, length(t_actual));
     i = find(abs(c*t_actual) < a * sin(ro+0.02));
-    E_cos_norm(j, i) = (cos(ro+0.02)/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
-    E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
-end
-
-d_f = 1/N_FFT/d_t;
-k = 1:1:N_FFT/2;
-[F, p] = min(abs(d_f*k - 3e+8/lambda));
-figure
-plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_norm(:, p))/max(abs(E_f_norm(:, p)))), 'k')
-hold on
-plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), '--k')
-grid on
-hold off
-title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 1')
-xlabel('2*a/\lambda*sin(\Theta)')
-ylabel('Amplitude, dB')
-legend('With 1', 'With cos')
-
-for j = 1 : size(t_h, 2)
-    i_t_h = t_h(j);
-    t_actual = t/2;
-    ro = i_t_h;
-    
-    % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
-    n = 2;
-    E_f_norm(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.03));
-    E_f_norm(j, i) = (1/(pi*sin(ro+0.03)^2))*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
-    E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
-
-    % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
-    n = 1;
-    E_cos_norm(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.03));
     E_cos_norm(j, i) = (cos(ro+0.03)/(pi*sin(ro+0.03)^2))*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
     E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
 end
@@ -348,28 +305,69 @@ figure
 plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_norm(:, p))/max(abs(E_f_norm(:, p)))), 'k')
 hold on
 plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), '--k')
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_fal_1(:, p))/max(abs(E_f_fal_1(:, p)))), '-.k')
 grid on
 hold off
-title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 2')
+title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 1')
 xlabel('2*a/\lambda*sin(\Theta)')
 ylabel('Amplitude, dB')
-legend('With 1', 'With cos')
+legend('With 1', 'With cos', 'With cos^2')
 
 for j = 1 : size(t_h, 2)
     i_t_h = t_h(j);
     t_actual = t/2;
     ro = i_t_h;
     
-    % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    % falling 2 with 1
+    n = 2;
+    E_f_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.03));
+    E_f_norm(j, i) = (1/(pi*sin(ro+0.03)^2))*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
+    E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
+
+    % falling 2 with cos
+    n = 2;
+    E_cos_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.04));
+    E_cos_norm(j, i) = (cos(ro+0.04)/(pi*sin(ro+0.04)^2))*sqrt((a*sin(ro+0.04))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.04))^2))).^n;
+    E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
+    
+   n = 2;
+    E_f_fal_2(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.03));
+    E_f_fal_2(j, i) = (cot(ro+0.03)/pi)*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
+    E_f_fal_2(j, :) = fft(E_f_fal_2(j, :), N_FFT);
+
+end
+
+d_f = 1/N_FFT/d_t;
+k = 1:1:N_FFT/2;
+[F, p] = min(abs(d_f*k - 3e+8/lambda));
+figure
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_norm(:, p))/max(abs(E_f_norm(:, p)))), 'k')
+hold on
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), '--k')
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_fal_2(:, p))/max(abs(E_f_fal_2(:, p)))), '-.k')
+grid on
+hold off
+title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 2')
+xlabel('2*a/\lambda*sin(\Theta)')
+ylabel('Amplitude, dB')
+legend('With 1', 'With cos', 'With cos^2')
+
+for j = 1 : size(t_h, 2)
+    i_t_h = t_h(j);
+    t_actual = t/2;
+    ro = i_t_h;
+    
+    % falling 3 with 1
     n = 3;
     E_f_norm(j, :) = zeros(1, length(t_actual));
     i = find(abs(c*t_actual) < a * sin(ro+0.04));
     E_f_norm(j, i) = (1/(pi*sin(ro+0.04)^2))*sqrt((a*sin(ro+0.04))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.04))^2))).^n;
     E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
 
-    % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    % falling 3 with cos
     n = 3;
     E_cos_norm(j, :) = zeros(1, length(t_actual));
     i = find(abs(c*t_actual) < a * sin(ro+0.05));
@@ -396,16 +394,14 @@ for j = 1 : size(t_h, 2)
     t_actual = t/2;
     ro = i_t_h;
     
-    % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    % falling 4 with 1
     n = 4;
     E_f_norm(j, :) = zeros(1, length(t_actual));
     i = find(abs(c*t_actual) < a * sin(ro+0.05));
     E_f_norm(j, i) = (1/(pi*sin(ro+0.05)^2))*sqrt((a*sin(ro+0.05))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.05))^2))).^n;
     E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
 
-    % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    % falling 4 with cos
     n = 4;
     E_cos_norm(j, :) = zeros(1, length(t_actual));
     i = find(abs(c*t_actual) < a * sin(ro+0.06));
@@ -432,16 +428,14 @@ for j = 1 : size(t_h, 2)
     t_actual = t/2;
     ro = i_t_h;
     
-    % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    % falling 5 with 1
     n = 5;
     E_f_norm(j, :) = zeros(1, length(t_actual));
     i = find(abs(c*t_actual) < a * sin(ro+0.06));
     E_f_norm(j, i) = (1/(pi*sin(ro+0.06)^2))*sqrt((a*sin(ro+0.06))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.06))^2))).^n;
     E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
 
-    % falling 1
-    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    % falling 5 with cos
     n = 5;
     E_cos_norm(j, :) = zeros(1, length(t_actual));
     i = find(abs(c*t_actual) < a * sin(ro+0.07));
