@@ -143,24 +143,24 @@ t_actual = t_demonstrate;
 ro = one_t_h;
 
 % f_fal_3 = calc_f_fal(one_t_h, 3, a, c, t_demonstrate);
-n = 3;
+%n = 0;
 f_fal_3 = zeros(1, length(t_actual));
 i = find(abs(c*t_actual) < a * sin(ro));
-f_fal_3(i) = (cos(ro)/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro))^2))).^n;
+f_fal_3(i) = (cos(ro)/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2);
 
 % f_fal_4 = calc_f_fal(one_t_h, 4, a, c, t_demonstrate);
-n = 4;
+n = 1;
 f_fal_4 = zeros(1, length(t_actual));
 i = find(abs(c*t_actual) < a * sin(ro));
 f_fal_4(i) = (cos(ro)/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro))^2))).^n;
 
 % f_fal_5 = calc_f_fal(one_t_h, 5, a, c, t_demonstrate);
-n = 5;
+n = 2;
 f_fal_5 = zeros(1, length(t_actual));
 i = find(abs(c*t_actual) < a * sin(ro));
 f_fal_5(i) = (cos(ro)/(pi*sin(ro)^2))*sqrt((a*sin(ro))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro))^2))).^n;
 
-% 1st plot (falling n=3, falling n=4, falling n=5)
+% 1st plot (falling n=0, falling n=1, falling n=2)
 % Transient far fields of circular flat aperture for different field amplitude distributions over the amplitude
 figure
 plot(t_demonstrate*nano_multiplier, f_fal_3, 'k')
@@ -172,26 +172,26 @@ hold off
 title('Transient far fields of circular flat aperture. a = 10 m. \theta = 9^o')
 xlabel('Time, ns')
 ylabel('Amplitude')
-legend('Falling distribution. n=3', 'Falling distribution. n=4', 'Falling distribution. n=5')
+legend('Falling distribution.', 'Falling distribution. n=1', 'Falling distribution. n=2')
 
-% 2nd plot (falling n=3, falling n=4, falling n=5)
+% 2nd plot (falling n=0, falling n=4, falling n=5)
 % Derivatives of transient far fields or three electric field distributions
 figure
 n = size(t_demonstrate, 2);
 
-% falling n = 3
+% falling n = 0
 f_der = diff(f_fal_3) ./ diff(t_demonstrate);
 f_der = f_der ./ norm(f_der, n);
 plot(t_demonstrate(1: end - 1)*nano_multiplier,  f_der, 'k')
 
 hold on
 
-% falling n = 4
+% falling n = 1
 f_der = diff(f_fal_4) ./ diff(t_demonstrate);
 f_der = f_der ./ norm(f_der, n);
 plot(t_demonstrate(1: end - 1)*nano_multiplier,  f_der, '--k')
 
-% falling n = 5
+% falling n = 2
 f_der = diff(f_fal_5) ./ diff(t_demonstrate);
 f_der = f_der ./ norm(f_der, n);
 plot(t_demonstrate(1: end - 1)*nano_multiplier,  f_der, '-.k')
@@ -201,51 +201,264 @@ hold off
 title('Derivatives of transient far fields. a = 10 m. \theta = 9^o')
 xlabel('Time, ns')
 ylabel('Normilized Amplitude')
-legend('Falling distribution. n=3', 'Falling distribution. n=4', 'Falling distribution. n=5')
+legend('Falling distribution. ', 'Falling distribution. n=1', 'Falling distribution. n=2')
 
-% 3rd plot (falling n=3, falling n=4, falling n=5)
+% 3rd plot (norm, falling n=1, falling n=2)
 % Far field antenna patterns for monochromatic signal
 for j = 1 : size(t_h, 2)
     i_t_h = t_h(j);
     t_actual = t/2;
     ro = i_t_h;
     
-    % falling n=3
-    % E_f_fal_3(j, :) = calc_f_fal(i_t_h, 3, a, c, t);
-    n = 3;
-    E_f_fal_3(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.04));
-    E_f_fal_3(j, i) = (cos(ro+0.04)/(pi*sin(ro+0.04)^2))*sqrt((a*sin(ro+0.04))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.04))^2))).^n;
-    E_f_fal_3(j, :) = fft(E_f_fal_3(j, :), N_FFT);
+    E_cos_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.02));
+    E_cos_norm(j, i) = (cos(ro+0.02)/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.02))^2-(c*t_actual(i)).^2);
+    E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
     
-    % falling n=4
+    % falling n=1
     % E_f_fal_4(j, :) = calc_f_fal(i_t_h, 4, a, c, t);
-    n = 4;
-    E_f_fal_4(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.05));
-    E_f_fal_4(j, i) = (cos(ro+0.05)/(pi*sin(ro+0.05)^2))*sqrt((a*sin(ro+0.05))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.05))^2))).^n;
-    E_f_fal_4(j, :) = fft(E_f_fal_4(j, :), N_FFT);
+    n = 1;
+    E_cos_fal_1(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.02));
+    E_cos_fal_1(j, i) = (cos(ro+0.02)/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.02))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.02))^2))).^n;
+    E_cos_fal_1(j, :) = fft(E_cos_fal_1(j, :), N_FFT);
     
-    % falling n=5
+    % falling n=2
     % E_f_fal_5(j, :) = calc_f_fal(i_t_h, 5, a, c, t);
-    n = 5;
-    E_f_fal_5(j, :) = zeros(1, length(t_actual));
-    i = find(abs(c*t_actual) < a * sin(ro+0.06));
-    E_f_fal_5(j, i) = (cos(ro+0.06)/(pi*sin(ro+0.06)^2))*sqrt((a*sin(ro+0.06))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.06))^2))).^n;
-    E_f_fal_5(j, :) = fft(E_f_fal_5(j, :), N_FFT);
+    n = 2;
+    E_cos_fal_2(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.03));
+    E_cos_fal_2(j, i) = (cos(ro+0.03)/(pi*sin(ro+0.03)^2))*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
+    E_cos_fal_2(j, :) = fft(E_cos_fal_2(j, :), N_FFT);
 end
 
 d_f = 1/N_FFT/d_t;
 k = 1:1:N_FFT/2;
 [F, p] = min(abs(d_f*k - 3e+8/lambda));
 figure
-plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_fal_3(:, p))/max(abs(E_f_fal_3(:, p)))), 'k')
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), 'k')
 hold on
-plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_fal_4(:, p))/max(abs(E_f_fal_4(:, p)))), '--k')
-plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_fal_5(:, p))/max(abs(E_f_fal_5(:, p)))), '-.k')
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_fal_1(:, p))/max(abs(E_cos_fal_1(:, p)))), '--k')
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_fal_2(:, p))/max(abs(E_cos_fal_2(:, p)))), '-.k')
 grid on
 hold off
 title('Far field antenna patterns for monochromatic signal. a/\lambda = 10')
 xlabel('2*a/\lambda*sin(\Theta)')
 ylabel('Amplitude, dB')
-legend('Falling distribution. n=3', 'Falling distribution. n=4', 'Falling distribution. n=5')
+legend('Falling distribution.', 'Falling distribution. n=1', 'Falling distribution. n=2')    
+
+
+%Comparison of graphs between 1 and cos
+
+for j = 1 : size(t_h, 2)
+    i_t_h = t_h(j);
+    t_actual = t/2;
+    ro = i_t_h;
+    
+    % norm
+    % E_f_norm(j, :) = calc_f_norm(i_t_h, a, c, t);
+    E_f_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.01));
+    E_f_norm(j, i) = (1/(pi*sin(ro+0.01)^2))*sqrt((a*sin(ro+0.01))^2-(c*t_actual(i)).^2);
+    E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
+
+    % norm
+    E_cos_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.02));
+    E_cos_norm(j, i) = (cos(ro+0.02)/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.02))^2-(c*t_actual(i)).^2);
+    E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
+end
+
+d_f = 1/N_FFT/d_t;
+k = 1:1:N_FFT/2;
+[F, p] = min(abs(d_f*k - 3e+8/lambda));
+figure
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_norm(:, p))/max(abs(E_f_norm(:, p)))), 'k')
+hold on
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), '--k')
+grid on
+hold off
+title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 0')
+xlabel('2*a/\lambda*sin(\Theta)')
+ylabel('Amplitude, dB')
+legend('With 1', 'With cos')
+
+for j = 1 : size(t_h, 2)
+    i_t_h = t_h(j);
+    t_actual = t/2;
+    ro = i_t_h;
+    
+    % falling 1
+    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    n = 1;
+    E_f_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.02));
+    E_f_norm(j, i) = (1/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.02))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.02))^2))).^n;
+    E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
+
+    % falling 1
+    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    n = 1;
+    E_cos_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.02));
+    E_cos_norm(j, i) = (cos(ro+0.02)/(pi*sin(ro+0.02)^2))*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
+    E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
+end
+
+d_f = 1/N_FFT/d_t;
+k = 1:1:N_FFT/2;
+[F, p] = min(abs(d_f*k - 3e+8/lambda));
+figure
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_norm(:, p))/max(abs(E_f_norm(:, p)))), 'k')
+hold on
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), '--k')
+grid on
+hold off
+title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 1')
+xlabel('2*a/\lambda*sin(\Theta)')
+ylabel('Amplitude, dB')
+legend('With 1', 'With cos')
+
+for j = 1 : size(t_h, 2)
+    i_t_h = t_h(j);
+    t_actual = t/2;
+    ro = i_t_h;
+    
+    % falling 1
+    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    n = 2;
+    E_f_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.03));
+    E_f_norm(j, i) = (1/(pi*sin(ro+0.03)^2))*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
+    E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
+
+    % falling 1
+    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    n = 1;
+    E_cos_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.03));
+    E_cos_norm(j, i) = (cos(ro+0.03)/(pi*sin(ro+0.03)^2))*sqrt((a*sin(ro+0.03))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.03))^2))).^n;
+    E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
+end
+
+d_f = 1/N_FFT/d_t;
+k = 1:1:N_FFT/2;
+[F, p] = min(abs(d_f*k - 3e+8/lambda));
+figure
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_norm(:, p))/max(abs(E_f_norm(:, p)))), 'k')
+hold on
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), '--k')
+grid on
+hold off
+title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 2')
+xlabel('2*a/\lambda*sin(\Theta)')
+ylabel('Amplitude, dB')
+legend('With 1', 'With cos')
+
+for j = 1 : size(t_h, 2)
+    i_t_h = t_h(j);
+    t_actual = t/2;
+    ro = i_t_h;
+    
+    % falling 1
+    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    n = 3;
+    E_f_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.04));
+    E_f_norm(j, i) = (1/(pi*sin(ro+0.04)^2))*sqrt((a*sin(ro+0.04))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.04))^2))).^n;
+    E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
+
+    % falling 1
+    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    n = 3;
+    E_cos_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.05));
+    E_cos_norm(j, i) = (cos(ro+0.05)/(pi*sin(ro+0.05)^2))*sqrt((a*sin(ro+0.05))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.05))^2))).^n;
+    E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
+end
+
+d_f = 1/N_FFT/d_t;
+k = 1:1:N_FFT/2;
+[F, p] = min(abs(d_f*k - 3e+8/lambda));
+figure
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_norm(:, p))/max(abs(E_f_norm(:, p)))), 'k')
+hold on
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), '--k')
+grid on
+hold off
+title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 3')
+xlabel('2*a/\lambda*sin(\Theta)')
+ylabel('Amplitude, dB')
+legend('With 1', 'With cos')
+
+for j = 1 : size(t_h, 2)
+    i_t_h = t_h(j);
+    t_actual = t/2;
+    ro = i_t_h;
+    
+    % falling 1
+    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    n = 4;
+    E_f_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.05));
+    E_f_norm(j, i) = (1/(pi*sin(ro+0.05)^2))*sqrt((a*sin(ro+0.05))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.05))^2))).^n;
+    E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
+
+    % falling 1
+    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    n = 4;
+    E_cos_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.06));
+    E_cos_norm(j, i) = (cos(ro+0.06)/(pi*sin(ro+0.06)^2))*sqrt((a*sin(ro+0.06))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.06))^2))).^n;
+    E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
+end
+
+d_f = 1/N_FFT/d_t;
+k = 1:1:N_FFT/2;
+[F, p] = min(abs(d_f*k - 3e+8/lambda));
+figure
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_norm(:, p))/max(abs(E_f_norm(:, p)))), 'k')
+hold on
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), '--k')
+grid on
+hold off
+title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 4')
+xlabel('2*a/\lambda*sin(\Theta)')
+ylabel('Amplitude, dB')
+legend('With 1', 'With cos')
+
+for j = 1 : size(t_h, 2)
+    i_t_h = t_h(j);
+    t_actual = t/2;
+    ro = i_t_h;
+    
+    % falling 1
+    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    n = 5;
+    E_f_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.06));
+    E_f_norm(j, i) = (1/(pi*sin(ro+0.06)^2))*sqrt((a*sin(ro+0.06))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.06))^2))).^n;
+    E_f_norm(j, :) = fft(E_f_norm(j, :), N_FFT);
+
+    % falling 1
+    % E_f_fal_1(j, :) = calc_f_fal(i_t_h, 1, a, c, t);
+    n = 5;
+    E_cos_norm(j, :) = zeros(1, length(t_actual));
+    i = find(abs(c*t_actual) < a * sin(ro+0.07));
+    E_cos_norm(j, i) = (cos(ro+0.07)/(pi*sin(ro+0.07)^2))*sqrt((a*sin(ro+0.07))^2-(c*t_actual(i)).^2) .* (1-(((c*t_actual(i)).^2)/((a*sin(ro+0.07))^2))).^n;
+    E_cos_norm(j, :) = fft(E_cos_norm(j, :), N_FFT);
+end
+
+d_f = 1/N_FFT/d_t;
+k = 1:1:N_FFT/2;
+[F, p] = min(abs(d_f*k - 3e+8/lambda));
+figure
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_f_norm(:, p))/max(abs(E_f_norm(:, p)))), 'k')
+hold on
+plot(4*a/lambda*sin(t_h), 20*log10(abs(E_cos_norm(:, p))/max(abs(E_cos_norm(:, p)))), '--k')
+grid on
+hold off
+title('Far field antenna patterns for monochromatic signal. a/\lambda = 10. n = 5')
+xlabel('2*a/\lambda*sin(\Theta)')
+ylabel('Amplitude, dB')
+legend('With 1', 'With cos')
